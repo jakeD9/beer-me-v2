@@ -78,7 +78,12 @@ router.route("/login")
         passport.authenticate('local', (err, user, info) => {
             if (err) { return next(err) }
             if (!user) { return res.sendStatus(401) }
-            else { return res.sendStatus(200) }
+            else { 
+                req.login(user, (err) => {
+                    console.log('Logged in ' + req.session.passport)
+                    return res.sendStatus(200)
+                })
+ }
         })(req, res, next)
     })
 
@@ -86,8 +91,16 @@ router.route("/login")
 router.route("/logout")
     .get((req, res) => {
         req.logout();
-        res.send("Logged out")
-        res.redirect("/login")
+        res.json("Logged out")
+    })
+
+router.route("/verify")
+    .post((req, res) => {
+        if(!req.user) return res.sendStatus(401)
+        const userInfo = req.user
+        const { email, _id, name } = userInfo
+        console.log('User info ' + userInfo);
+        return res.json({email, _id, name})
     })
 
 

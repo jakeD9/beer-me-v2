@@ -83,11 +83,9 @@ class Login extends Component {
         console.log(response.status);
         if (response.status === 200) {
           this.setState({ success: true })
-          console.log(this.state)
         }
         if (response.status === 401) {
           this.setState({ context: "Invalid login credentials." })
-          console.log(this.state)
         }
       })
       .catch(err => console.log(err))

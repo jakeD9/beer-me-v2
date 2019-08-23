@@ -5,7 +5,6 @@ module.exports = {
         }
         else {
             res.send('Please log in to view this resource');
-            res.redirect('/login')
         }
     }
 }
