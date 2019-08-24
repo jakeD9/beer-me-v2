@@ -86,7 +86,6 @@ class SignUp extends Component {
         event.preventDefault();
         API.registerUser(this.state.form)
             .then(response => {
-                console.log(response)
                 this.setState({
                     context: response[0].msg
                 })
@@ -105,8 +104,6 @@ class SignUp extends Component {
             floater = <FloaterGreen message={this.state.context} />
         } else if (this.state.context.length > 0) {
             floater = <FloaterRed message={this.state.context} />
-        } else {
-            floater = floater
         }
 
         return (

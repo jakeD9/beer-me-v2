@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import API from '../../utils/API';
-import Navigation from '../../components/Navigation/Navigation';
 import { Redirect } from 'react-router-dom'
-import Typography from '@material-ui/core/Typography';
+import NavFix from '../../components/NavFix/NavFix';
+import Search from '../../components/Search/Search';
 
 
 class Dashboard extends Component {
@@ -27,7 +27,6 @@ class Dashboard extends Component {
                 beers: []
             },
             search: {
-                beers: [],
                 news: [],
             }
         }
@@ -47,6 +46,7 @@ class Dashboard extends Component {
                     }
                 })
             })
+        
     }
 
     componentDidMount = () => {
@@ -62,6 +62,9 @@ class Dashboard extends Component {
         //         })
         //         console.log(this.state.data.personal.beers)
         //     })
+
+
+
         // const beer = {
         //     name: "Unfiltered Wheat",
         //     brewery: "Boulevard Brewery",
@@ -81,8 +84,6 @@ class Dashboard extends Component {
         //         console.log(response)
         //     })
 
-        API.searchBeers("stone")
-            .then(response => console.log(response))
     }
 
     handleLogout = () => {
@@ -92,18 +93,21 @@ class Dashboard extends Component {
 
 
     render() {
+    
+
+
         if (this.state.auth.isAuthenticated === false) return ("Error 401 Unauthorized: Please log in to view this resource.")
-        if (this.state.auth.loggedOut === true) return <Redirect to="/login"/>
+        if (this.state.auth.loggedOut === true) return <Redirect to="/login" />
 
         return (
             <div>
-                <Navigation 
+                <NavFix
                     name={this.state.auth.name}
-                    logoutHandler={this.handleLogout}
-                />
-                
-                 
+                    logoutHandler={this.handleLogout} />
+                <Search 
+                    />
             </div>
+
         )
     }
 }

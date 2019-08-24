@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import LandingPage from '../src/containers/LandingPage/LandingPage';
 import Dashboard from '../src/containers/Dashboard/Dashboard';
+import MenuWrapper from '../src/containers/MenuWrapper/MenuWrapper';
 import Login from './components/Login/Login';
 import SignUp from './components/SignUp/SignUp';
 
@@ -12,9 +13,8 @@ function App() {
       {/* <Route exact path="/" component={LandingPage} /> */}
       <Route exact path="/login" component={Login}/>
       <Route exact path="/register" component={SignUp}/>
-      <Route exact path="/dashboard" component={Dashboard} />
+      <Route exact path="/dashboard" component={MenuWrapper} />
     </Router>
-
   );
 }
 
