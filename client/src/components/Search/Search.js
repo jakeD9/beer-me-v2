@@ -65,7 +65,6 @@ class Search extends Component {
         API.searchBeers(this.state.query)
             .then(response => {
                 this.setState({ results: response })
-                console.log(this.state.results)
             })
     }
 
@@ -73,7 +72,6 @@ class Search extends Component {
         let beerToAdd = this.state.results.find(beer => beer._id === id)
         API.addBeer(beerToAdd)
             .then(response => {
-                console.log(response)
                 this.setState({ context: response[0].msg })
             })
     }
@@ -123,9 +121,11 @@ class Search extends Component {
                                 source={beer.source}
                                 name={beer.name}
                                 brewery={beer.brewery}
+                                location={beer.location}
                                 abv={beer.abv}
                                 type={beer.type}
                                 location={beer.location}
+                                buttonText={"Add to my list"}
                                 addToUserBeerList={() => this.addBeer(beer._id)} />
                         ))}
                     </div>
@@ -136,9 +136,7 @@ class Search extends Component {
                         Results will appear here
                     </Typography>
                     )}
-
             </Paper>
-
         )
     }
 }

@@ -9,7 +9,8 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(theme => {
     return {
         card: {
-            width: '35%',
+            width: 400,
+            height: 235,
             marginBottom: theme.spacing(2),
             marginLeft: theme.spacing(1),
             marginRight: theme.spacing(1),
@@ -17,11 +18,6 @@ const useStyles = makeStyles(theme => {
                 width: '100%',
             }
 
-        },
-        bullet: {
-            display: 'inline-block',
-            margin: '0 2px',
-            transform: 'scale(0.8)',
         },
         title: {
             fontSize: 14,
@@ -48,6 +44,8 @@ const BeerItem = (props) => {
               </Typography>
                 <Typography className={classes.pos} color="textSecondary">
                     {props.brewery}
+                    <br />
+                    {props.location}
               </Typography>
                 <Typography variant="body2" component="p">
                     {props.type}
@@ -56,7 +54,7 @@ const BeerItem = (props) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" onClick={props.addToUserBeerList}>Add to my list</Button>
+                <Button size="small" onClick={props.addToUserBeerList}>{props.buttonText}</Button>
             </CardActions>
         </Card>
     );

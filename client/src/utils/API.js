@@ -62,12 +62,14 @@ const API = {
     },
 
     createBeer: (beer) => {
+        let beerData = beer
+        beerData.abv = parseFloat(beerData.abv)
         return fetch('/api/createbeer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(beer)
+            body: JSON.stringify(beerData)
         })
             .then(res => res.json())
             .catch(err => console.log(err))

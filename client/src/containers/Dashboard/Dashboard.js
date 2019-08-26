@@ -3,6 +3,9 @@ import API from '../../utils/API';
 import { Redirect } from 'react-router-dom'
 import NavFix from '../../components/NavFix/NavFix';
 import Search from '../../components/Search/Search';
+import Home from '../../containers/Home/Home';
+import CreateBeer from '../CreateBeer/CreateBeer';
+import PersonalBeers from '../PersonalBeers/PersonalBeers'
 
 
 class Dashboard extends Component {
@@ -32,7 +35,11 @@ class Dashboard extends Component {
         }
     };
 
-    componentWillMount = () => {
+    navigationToggle = () => {
+
+    }
+
+    componentDidMount = () => {
         API.verifyUser()
             .then(response => {
                 if (!response) return
@@ -45,23 +52,20 @@ class Dashboard extends Component {
                         isAuthenticated: true,
                     }
                 })
-            })
-        
-    }
+                API.getBeers()
+                    .then(response => {
+                        if (!response) return
+                        this.setState({
+                            data: {
+                                personal: {
+                                    beers: response
+                                }
+                            }
+                        })
+                    })
 
-    componentDidMount = () => {
-        // API.getBeers(this.state.auth.mId)
-        //     .then(response => {
-        //         if (!response) return
-        //         this.setState({
-        //             data: {
-        //                 personal: {
-        //                     beers: response
-        //                 }
-        //             }
-        //         })
-        //         console.log(this.state.data.personal.beers)
-        //     })
+            })
+
 
 
 
@@ -93,9 +97,6 @@ class Dashboard extends Component {
 
 
     render() {
-    
-
-
         if (this.state.auth.isAuthenticated === false) return ("Error 401 Unauthorized: Please log in to view this resource.")
         if (this.state.auth.loggedOut === true) return <Redirect to="/login" />
 
@@ -104,8 +105,13 @@ class Dashboard extends Component {
                 <NavFix
                     name={this.state.auth.name}
                     logoutHandler={this.handleLogout} />
-                <Search 
-                    />
+                {/* <Home 
+                    beerCounter={this.state.data.personal.beers.length}/> */}
+                {/* <Search /> */}
+                {/* <CreateBeer /> */}
+                <PersonalBeers />
+
+
             </div>
 
         )

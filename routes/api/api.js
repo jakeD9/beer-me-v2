@@ -104,7 +104,10 @@ router.route("/createbeer")
                                 else { res.status(200).json([{ msg: "Beer added to your list!", beer: info }]) }
                             })
                         })
-                        .catch(err => console.log(err))
+                        .catch(err => {
+                            console.log(err)
+                            res.status(500).json([{ msg: "Server Error, try again" }])
+                        })
                 }
             })
             .catch(err => {
