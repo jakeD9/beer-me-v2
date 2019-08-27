@@ -67,8 +67,8 @@ function Home(props) {
                 </figure>
             </Paper>
             <div className={classes.sideColumn}>
-                <BeerCounter beerCount={props.beerCounter}/>
-                <AddBeerLink />
+                <BeerCounter beerCount={props.beerCounter} linkHandler={props.viewAllHandler}/>
+                <AddBeerLink linkHandler={props.addLinkHandler}/>
             </div>
         </div>
 

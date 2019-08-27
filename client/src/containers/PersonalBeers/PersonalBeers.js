@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
-
+import API from '../../utils/API'
 import BeerTable2 from '../../components/BeerTable/BeerTable2';
 
 
@@ -47,33 +47,16 @@ const styles = theme => ({
     }
 })
 
-function createData(name, brewery, abv, type, location, id) {
-    return { name, brewery, abv, type, location, id };
-}
 
-const beerData = [
-    createData("Boulevard Wheat", "Boulevard", 4.5, "American Wheat", "Kansas City, MO", 1),
-    createData("Snapper", "Logboat", 7.2, "IPA", "Columbia, MO", 2),
-    createData("Stone IPA", "Stone Brewing Co", 7.6, "IPA", "Estiglio, CA", 3),
-    createData("Breakfast Stout", "Founders", 9.2, "Stout", "Lansing, MI", 4),
-    createData("Cosmic IPA", "Boulevard", 5.5, "American IPA", "Kansas City, MO", 5),
-    createData("Chocolate Milk Stout", "4Hands", 4.4, "Milk Stout", "St. Louis, MO", 6),
-    createData("Dunkel", "KC Bier Company", 6, "Dark Lager", "Kansas City, MO", 7),
-    createData("Buffalo Sweat", "Tallgrass Brewing Co", 6.2, "Stout", "Manhattan, KS", 8),
-    createData("Porter", "Founders", 6.2, "Porter", "Lansing, MI", 9),
-    createData("Brooklyn Lager", "Brooklyn Brewery", 5.1, "American Lager", "New York City, NY", 10),
-
-]
 
 class PersonalBeers extends Component {
     state = {
         query: "",
         queryType: "name",
-        fullBeerList: beerData,
-        filtered: beerData,
+        fullBeerList: this.props.beerData,
+        filtered: this.props.beerData,
+        context: []
     }
-
-
 
     handleQueryChange = (event) => {
         this.setState({ query: event.target.value })
@@ -82,16 +65,28 @@ class PersonalBeers extends Component {
             return beer[this.state.queryType].toString().toLowerCase().search(
                 event.target.value.toString().toLowerCase()) !== -1
         })
-        console.log(filteredBeers)
         this.setState({ filtered: filteredBeers })
     }
 
-
     filterSelect = (event) => {
         this.setState({ queryType: event.target.value })
-        setTimeout(() => console.log(this.state.queryType), 3000)
     }
 
+    deleteBeer = (id) => {
+        const conf = window.confirm("Are you sure? You can always add it back.")
+
+        if (conf) {
+            API.deleteBeer(id)
+                .then(response => {
+                    console.log(response)
+                    let newFullList = this.state.fullBeerList
+                    newFullList = newFullList.filter(beer => {
+                        return beer._id !== id
+                    })
+                    this.setState({ fullBeerList: newFullList, filtered: newFullList })
+                })
+        } else return
+    }
 
     render() {
         const { classes } = this.props
@@ -134,7 +129,7 @@ class PersonalBeers extends Component {
 
                 <Divider className={classes.divider} />
 
-                <BeerTable beerData={this.state.filtered} />
+                <BeerTable beerData={this.state.filtered} delHandler={this.deleteBeer} />
                 {/* <BeerTable2 /> */}
             </Paper>
 

@@ -93,6 +93,7 @@ const API = {
     },
 
     deleteBeer: (beerId) => {
+        console.log(beerId)
         return fetch('/api/removebeer/' + beerId, {
             method: 'DELETE',
         })

@@ -38,7 +38,7 @@ function AddBeerLink(props) {
                 Add more Beers!
             </Typography>
 
-            <AddBoxRoundedIcon className={classes.icon} />
+            <AddBoxRoundedIcon className={classes.icon} onClick={() => props.linkHandler("Add a Beer")}/>
 
         </Paper>
 

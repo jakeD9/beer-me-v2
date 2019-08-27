@@ -38,7 +38,7 @@ function BeerCounter(props) {
             <Typography align='center' color='primary' display='block' variant='h2' className={classes.count}>
                 {props.beerCount}
             </Typography>
-            <Button variant='outlined' className={classes.button}>
+            <Button variant='outlined' className={classes.button} onClick={() => props.linkHandler("My Beers")}>
                 View All &rarr;
             </Button>
         </Paper>

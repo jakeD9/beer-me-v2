@@ -29,7 +29,7 @@ router.route("/searchbeers/:query")
         let queryRegex = new RegExp(query)
         const queryDatabase = async () => {
             await Beer.find({ name: { $regex: queryRegex, $options: 'i' } }, (err, beers) => {
-                if (err) return res.status(500).json([{ msg: "Failure searching from database" }])
+                if (err) return res.status(500).json([{ status: 500, msg: "Failure searching from database" }])
                 if (beers.length > 10) { dbBeers.dbBeerList = beers.slice(0, 10) }
                 else {
                     let parsedDB = beers.map(beer =>
@@ -88,7 +88,7 @@ router.route("/createbeer")
         const { _id } = req.user._id;
         Beer.findOne({ name: name, brewery: brewery })
             .then(beer => {
-                if (beer) res.status(400).json([{ msg: "Beer already in database, please add it to your list from the search menu" }])
+                if (beer) res.status(400).json([{ status: 400, msg: "Beer already in database, please add it to your list from the search menu" }])
                 else {
                     const newBeer = new Beer({
                         name,
@@ -100,19 +100,19 @@ router.route("/createbeer")
                     newBeer.save()
                         .then(beer => {
                             User.findOneAndUpdate({ _id: _id }, { "$push": { "beers": beer._id } }, { new: true, runValidators: true }, (err, info) => {
-                                if (err) res.status(500).json([{ msg: "Server Error" }])
-                                else { res.status(200).json([{ msg: "Beer added to your list!", beer: info }]) }
+                                if (err) res.status(500).json([{ status: 500, msg: "Server Error" }])
+                                else { res.status(200).json([{ status: 200, msg: "Beer added to your list!", beer: info }]) }
                             })
                         })
                         .catch(err => {
                             console.log(err)
-                            res.status(500).json([{ msg: "Server Error, try again" }])
+                            res.status(500).json([{ status: 500, msg: "Server Error, try again" }])
                         })
                 }
             })
             .catch(err => {
                 console.log(err)
-                res.status(500).json([{ msg: "Server Error, try again" }])
+                res.status(500).json([{ status: 500, msg: "Server Error, try again" }])
             })
     })
 
@@ -121,10 +121,19 @@ router.route("/addbeer")
         const { _id } = req.user._id;
         if (req.body._id) {
             const beerId = req.body._id
-            User.findOneAndUpdate({ _id: _id }, { "$push": { "beers": beerId } }, { new: true, runValidators: true }, (err, info) => {
-                if (err) res.status(500).json([{ msg: "Server Error, try again" }])
-                else { res.status(200).json([{ msg: "Success, beer added" }]) }
-            })
+            User.findOne({ _id: _id }).populate('beers')
+                .then(user => {
+                    let duplicateCheck = user.beers.filter(beer => {
+                        return beer._id == req.body._id
+                    })
+                    if (duplicateCheck.length > 0) res.status(400).json([{ msg: "That beer is already on your list!" }])
+                    else {
+                        User.findOneAndUpdate({ _id: _id }, { "$push": { "beers": beerId } }, { upsert: true, new: true, runValidators: true }, (err, info) => {
+                            if (err) res.status(500).json([{ msg: "Server Error, try again" }])
+                            else { res.status(200).json([{ msg: "Success, beer added" }]) }
+                        })
+                    }
+                })
         }
         else {
             const { name, brewery, abv, type, location } = req.body;
@@ -154,8 +163,8 @@ router.route("/removebeer/:id")
         const beerId = req.params.id
         const { _id } = req.user;
         User.findOneAndUpdate({ _id: _id }, { "$pull": { "beers": beerId } }, { new: true }, (err, info) => {
-            if (err) res.send(500).json([{ msg: "Server Error" }])
-            else { res.status(200).json(info) }
+            if (err) res.status(500).json([{ status: 500, msg: "Server Error" }])
+            else { res.status(200).json([{ status: 200, msg: "Beer removed!", info: info }]) }
         })
     })
 

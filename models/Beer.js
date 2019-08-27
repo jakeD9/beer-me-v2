@@ -16,6 +16,7 @@ const BeerSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
+        default: "Unknown"
     },
     location: {
         type: String,

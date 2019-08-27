@@ -6,6 +6,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,6 +28,7 @@ function BeerTable(props) {
         { id: 'abv', numeric: true, label: 'ABV (%)' },
         { id: 'type', numeric: false, label: 'Type' },
         { id: 'location', numeric: false, label: 'Location' },
+        { id: 'delete', numeric: false, label: 'Delete'}
     ]
 
 
@@ -51,14 +55,20 @@ function BeerTable(props) {
                 </TableHead>
                 <TableBody>
                     {beerData.map(beer => (
-                        <TableRow key={beer.id}>
+                        <TableRow key={beer._id}>
                             <TableCell component="th" scope="row">
                                 {beer.name}
                             </TableCell>
                             <TableCell align="left">{beer.brewery}</TableCell>
                             <TableCell align="right">{beer.abv}</TableCell>
                             <TableCell align="left">{beer.type}</TableCell>
-                            <TableCell align="left">{beer.location}</TableCell>                       </TableRow>
+                            <TableCell align="left">{beer.location}</TableCell>      
+                            <TableCell align="right">
+                                <IconButton>
+                                    <DeleteIcon onClick={() => props.delHandler(beer._id)}/>
+                                </IconButton>
+                            </TableCell>               
+                        </TableRow>
                     ))}
                 </TableBody>
             </Table>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3),
   },
   title: {
-      flexGrow: 1,
+    flexGrow: 1,
   }
 }));
 
@@ -67,39 +67,45 @@ function ResponsiveDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [navSelected, setNav] = React.useState("Home")
+
+  const navSwitch = (name) => {
+    props.navClickHandler(name)
+  }
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
   }
 
   function mapDrawerIcons(index) {
-    if (index === 0) return <HomeIcon/>
-    if (index === 1) return <SearchIcon/>
-    if (index === 2) return <LocalDrinkIcon/>
-    if (index === 3) return <DescriptionIcon/>
-}
+    if (index === 0) return <HomeIcon />
+    if (index === 1) return <SearchIcon />
+    if (index === 2) return <LocalDrinkIcon />
+    if (index === 3) return <DescriptionIcon />
+  }
+
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
-        <List>
-          {['Home', 'Search Beers', 'My Beers', 'News',].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{mapDrawerIcons(index)}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Report Issue', 'Settings'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <BugReportIcon /> : <SettingsIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+      <List>
+        {['Home', 'Search Beers', 'My Beers', 'Add a Beer'].map((text, index) => (
+          <ListItem button key={text} onClick={() => navSwitch(text)}>
+            <ListItemIcon>{mapDrawerIcons(index)}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['Report Issue', 'Settings'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{index % 2 === 0 ? <BugReportIcon /> : <SettingsIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 
@@ -118,13 +124,12 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.title}>
-           Welcome {props.name}
+            Welcome {props.name}
           </Typography>
           <Button color="inherit" onClick={props.logoutHandler}>Logout</Button>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
             container={container}
@@ -136,7 +141,7 @@ function ResponsiveDrawer(props) {
               paper: classes.drawerPaper,
             }}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true,
             }}
           >
             {drawer}
@@ -159,10 +164,6 @@ function ResponsiveDrawer(props) {
 }
 
 ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
 };
 

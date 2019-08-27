@@ -110,13 +110,24 @@ class CreateBeer extends Component {
             this.setState({ context: { error: "No special characters or blank fields allowed" } })
         } else {
             API.createBeer(beerToSend)
-                .then(response => { 
-                    this.setState({ 
-                        context: { 
-                            error: null,
-                            success: response[0].msg 
-                        } 
-                    }) 
+                .then(response => {
+                    console.log(response.status)
+                    if (response[0].status == 200) {
+                        this.setState({
+                            context: {
+                                error: null,
+                                success: response[0].msg
+                            }
+                        })
+                    }
+                    else {
+                        this.setState({ 
+                            context: { 
+                                error: response[0].msg,
+                                success: null
+                            } 
+                        }) 
+                    }
                 })
         }
     }
@@ -135,7 +146,7 @@ class CreateBeer extends Component {
                         If you haven't already, please try searching for one first!
                     </Typography>
                     <form noValidate className={classes.form} onSubmit={this.sendBeer}>
-                        {this.state.context.error ? <FloaterRed message={this.state.context.error}/> : ""}
+                        {this.state.context.error ? <FloaterRed message={this.state.context.error} /> : ""}
                         {this.state.context.success ? <FloaterGreen message={this.state.context.success} /> : ""}
                         <PassToParentField
                             name="name"
