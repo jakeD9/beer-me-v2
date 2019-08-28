@@ -162,8 +162,8 @@ function ResponsiveDrawer(props) {
   );
 }
 
-ResponsiveDrawer.propTypes = {
-  container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
-};
+// ResponsiveDrawer.propTypes = {
+//   container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
+// };
 
 export default ResponsiveDrawer;

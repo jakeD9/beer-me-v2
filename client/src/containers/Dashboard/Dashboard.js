@@ -12,7 +12,7 @@ class Dashboard extends Component {
     state = {
         auth: {
             loggedOut: false,
-            isAuthenticated: true,
+            isAuthenticated: false,
             email: "",
             name: "User",
             mId: undefined
