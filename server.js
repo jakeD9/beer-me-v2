@@ -2,7 +2,7 @@ const express = require('express');
 const routes = require("./routes");
 const mongoose = require("mongoose");
 const db = require('./config/keys').MongoURI;
-// const flash = require('connect-flash');
+const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
 require('./config/passport')(passport)
@@ -44,6 +44,10 @@ if (process.env.NODE_ENV === "production") {
 
 // routes
 app.use(routes)
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  });
 
 app.listen(PORT, console.log(
     `Server running on port ${PORT}`
