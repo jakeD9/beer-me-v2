@@ -12,10 +12,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 import API from '../../utils/API'
-import BeerTable2 from '../../components/BeerTable/BeerTable2';
-
-
-
 
 const styles = theme => ({
     personalContainer: {
@@ -27,14 +23,21 @@ const styles = theme => ({
     searchContainer: {
         display: 'flex',
         justifyContent: 'center',
-        width: '90%'
+        width: '90%',
+        [theme.breakpoints.down('md')]: {
+            flexDirection: 'column',
+            alignItems: 'center'
+        }
     },
     header: {
         marginTop: theme.spacing(4),
         marginBottom: theme.spacing(2)
     },
     searchField: {
-        width: '40%'
+        width: '40%',
+        [theme.breakpoints.down('md')]: {
+            width: '80%',
+        }
     },
     formControl: {
         minWidth: 140,
@@ -74,11 +77,10 @@ class PersonalBeers extends Component {
 
     deleteBeer = (id) => {
         const conf = window.confirm("Are you sure? You can always add it back.")
-
+        this.props.refreshHandler()
         if (conf) {
             API.deleteBeer(id)
                 .then(response => {
-                    console.log(response)
                     let newFullList = this.state.fullBeerList
                     newFullList = newFullList.filter(beer => {
                         return beer._id !== id
@@ -130,7 +132,6 @@ class PersonalBeers extends Component {
                 <Divider className={classes.divider} />
 
                 <BeerTable beerData={this.state.filtered} delHandler={this.deleteBeer} />
-                {/* <BeerTable2 /> */}
             </Paper>
 
 

@@ -16,6 +16,7 @@ const styles = theme => ({
     createBeerContainer: {
         display: 'flex',
         flexDirection: 'row',
+        margin: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             flexDirection: 'column-reverse',
         }
@@ -28,7 +29,7 @@ const styles = theme => ({
         justifyContent: 'center',
         [theme.breakpoints.down('sm')]: {
             width: '100%',
-            marginLeft: theme.spacing(4)
+            margin: 0
         }
     },
     form: {
@@ -59,7 +60,11 @@ const styles = theme => ({
         margin: theme.spacing(2),
         [theme.breakpoints.down('sm')]: {
             width: '100%',
+            margin: 0
         }
+    },
+    beerItem: {
+        margin: 0
     },
     button: {
         marginTop: theme.spacing(2),
@@ -91,7 +96,7 @@ class CreateBeer extends Component {
     sendBeer = (event) => {
         const validation = (string) => {
             let format = /[!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?]/;
-            if (format.test(string) || string.length == 0) {
+            if (format.test(string) || string.length === 0) {
                 return false
             } else return true
         }
@@ -111,14 +116,26 @@ class CreateBeer extends Component {
         } else {
             API.createBeer(beerToSend)
                 .then(response => {
-                    console.log(response.status)
-                    if (response[0].status == 200) {
+                    if (response[0].status === 200) {
+                        this.props.refreshHandler()
                         this.setState({
                             context: {
                                 error: null,
                                 success: response[0].msg
                             }
                         })
+                        setTimeout(() => {
+                            this.setState({
+                                name: "",
+                                brewery: "",
+                                location: "",
+                                type: "",
+                                abv: "",
+                                context: {
+                                    success: null
+                                }
+                            })
+                        }, 1500)
                     }
                     else {
                         this.setState({ 
@@ -203,7 +220,8 @@ class CreateBeer extends Component {
                     </form>
                 </Paper>
                 <div className={classes.itemContainer}>
-                    <BeerItem
+                    <BeerItem   
+                        activateSlide={this.state.context.success ? false : true}
                         source={"New Beer"}
                         name={this.state.name}
                         brewery={this.state.brewery}
@@ -211,6 +229,7 @@ class CreateBeer extends Component {
                         type={this.state.type}
                         abv={this.state.abv}
                         buttonText={""}
+                        className={classes.beerItem}
                     />
                 </div>
 

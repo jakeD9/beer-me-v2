@@ -62,7 +62,7 @@ function Home(props) {
                     Your personal tool for all things craft beer.
                 </Typography>
                 <figure className={classes.imgContainer}>
-                    <img src={beerImg} className={classes.img2} />
+                    <img src={beerImg} className={classes.img2} alt="beerlabel" />
 
                 </figure>
             </Paper>

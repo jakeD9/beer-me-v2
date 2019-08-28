@@ -64,8 +64,8 @@ function BeerTable(props) {
                             <TableCell align="left">{beer.type}</TableCell>
                             <TableCell align="left">{beer.location}</TableCell>      
                             <TableCell align="right">
-                                <IconButton>
-                                    <DeleteIcon onClick={() => props.delHandler(beer._id)}/>
+                                <IconButton onClick={() => props.delHandler(beer._id)}>
+                                    <DeleteIcon />
                                 </IconButton>
                             </TableCell>               
                         </TableRow>

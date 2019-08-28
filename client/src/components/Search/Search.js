@@ -45,14 +45,19 @@ const styles = theme => ({
         flexWrap: 'wrap',
         flexDirection: 'row',
         justifyContent: 'center'
+    },
+    floatContainer: {
+        width: '80%',
+        marginLeft: 'auto',
+        marginRight: 'auto'
     }
 });
 
 class Search extends Component {
     state = {
         query: "",
-        results: null,
-        loading: false,
+        results: undefined,
+        keyToRemove: "",
         context: []
     }
 
@@ -62,9 +67,12 @@ class Search extends Component {
 
     executeBeerSearch = (event) => {
         event.preventDefault();
+        this.setState({ context: [] })
         API.searchBeers(this.state.query)
             .then(response => {
-                this.setState({ results: response })
+                console.log(response)
+                if (response.length === 0) this.setState({ context: "No results found, try creating it?" })
+                else this.setState({ results: response })
             })
     }
 
@@ -72,7 +80,8 @@ class Search extends Component {
         let beerToAdd = this.state.results.find(beer => beer._id === id)
         API.addBeer(beerToAdd)
             .then(response => {
-                this.setState({ context: response[0].msg })
+                this.setState({ keyToRemove: beerToAdd._id, context: response[0].msg })
+                this.props.refreshHandler()
             })
     }
 
@@ -105,17 +114,20 @@ class Search extends Component {
                     <Button
                         type="submit"
                         color="primary"
-                        s className={classes.button}
+                        className={classes.button}
                     >
                         Search
                     </Button>
                 </form>
-                {floater}
+                <div className={classes.floatContainer}>
+                    {floater}
+                </div>
                 <Divider className={classes.divider} />
                 {this.state.results ? (
                     <div className={classes.beerContainer}>
                         {this.state.results.map(beer => (
                             <BeerItem
+                                activateSlide={beer._id === this.state.keyToRemove ? false : true}
                                 key={beer._id}
                                 source={beer.source}
                                 name={beer.name}
@@ -123,7 +135,6 @@ class Search extends Component {
                                 location={beer.location}
                                 abv={beer.abv}
                                 type={beer.type}
-                                location={beer.location}
                                 buttonText={"Add to my list"}
                                 addToUserBeerList={() => this.addBeer(beer._id)} />
                         ))}
@@ -131,9 +142,9 @@ class Search extends Component {
 
 
                 ) : (
-                    <Typography align='center' variant='h5'>
-                        Results will appear here
-                    </Typography>
+                        <Typography align='center' variant='h5'>
+                            Results will appear here
+                        </Typography>
                     )}
             </Paper>
         )

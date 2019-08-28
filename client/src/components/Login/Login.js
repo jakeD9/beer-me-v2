@@ -103,8 +103,6 @@ class Login extends Component {
     )
     if (this.state.context.length > 0) {
       floater = <FloaterRed message={this.state.context} />
-    } else {
-      floater = floater
     }
 
     if (this.state.success === true) return <Redirect to="/dashboard" />

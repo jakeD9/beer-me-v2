@@ -8,24 +8,6 @@ import CreateBeer from '../CreateBeer/CreateBeer';
 import PersonalBeers from '../PersonalBeers/PersonalBeers'
 
 
-function createData(name, brewery, abv, type, location, id) {
-    return { name, brewery, abv, type, location, id };
-}
-
-const beerData = [
-    createData("Boulevard Wheat", "Boulevard", 4.5, "American Wheat", "Kansas City, MO", 1),
-    createData("Snapper", "Logboat", 7.2, "IPA", "Columbia, MO", 2),
-    createData("Stone IPA", "Stone Brewing Co", 7.6, "IPA", "Estiglio, CA", 3),
-    createData("Breakfast Stout", "Founders", 9.2, "Stout", "Lansing, MI", 4),
-    createData("Cosmic IPA", "Boulevard", 5.5, "American IPA", "Kansas City, MO", 5),
-    createData("Chocolate Milk Stout", "4Hands", 4.4, "Milk Stout", "St. Louis, MO", 6),
-    createData("Dunkel", "KC Bier Company", 6, "Dark Lager", "Kansas City, MO", 7),
-    createData("Buffalo Sweat", "Tallgrass Brewing Co", 6.2, "Stout", "Manhattan, KS", 8),
-    createData("Porter", "Founders", 6.2, "Porter", "Lansing, MI", 9),
-    createData("Brooklyn Lager", "Brooklyn Brewery", 5.1, "American Lager", "New York City, NY", 10),
-
-]
-
 class Dashboard extends Component {
     state = {
         auth: {
@@ -49,7 +31,6 @@ class Dashboard extends Component {
 
     navigationToggle = (name) => {
         this.setState({ ui: { display: name } })
-        setTimeout(() => console.log(this.state.ui.display), 1000)
     }
 
     componentDidMount = () => {
@@ -79,16 +60,26 @@ class Dashboard extends Component {
             })
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevState.data.personal.beers.length !== this.state.data.personal.beers.length) {
+            return API.getBeers()
+                .then(response => {
+                    this.setState({
+                        data: {
+                            personal: {
+                                beers: response
+                            }
+                        }
+                    })
+                })
+        } else return
+    }
+
+    refreshBeers = () => {
         API.getBeers()
             .then(response => {
-                if (!response) return
                 this.setState({
-                    data: {
-                        personal: {
-                            beers: response
-                        }
-                    }
+                    data: { personal: { beers: response } }
                 })
             })
     }
@@ -113,12 +104,9 @@ class Dashboard extends Component {
                     beerCounter={this.state.data.personal.beers.length}
                     viewAllHandler={this.navigationToggle}
                     addLinkHandler={this.navigationToggle} /> : ""}
-                {this.state.ui.display === "Search Beers" ? <Search /> : ""}
-                {this.state.ui.display === "My Beers" ? <PersonalBeers beerData={this.state.data.personal.beers} /> : ""}
-                {this.state.ui.display === "Add a Beer" ? <CreateBeer /> : ""}
-
-
-
+                {this.state.ui.display === "Search Beers" ? <Search refreshHandler={this.refreshBeers}/> : ""}
+                {this.state.ui.display === "My Beers" ? <PersonalBeers beerData={this.state.data.personal.beers} refreshHandler={this.refreshBeers}/> : ""}
+                {this.state.ui.display === "Add a Beer" ? <CreateBeer refreshHandler={this.refreshBeers}/> : ""}
             </div>
 
         )

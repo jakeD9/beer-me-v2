@@ -60,7 +60,7 @@ router.route("/searchbeers/:query")
                             abv: record.fields.abv >= 0 ? parseFloat(record.fields.abv.toFixed(2)) : "No ABV found",
                             type: record.fields.style_name,
                             location: record.fields.city + ", " + record.fields.state,
-                            _id: index
+                            _id: index + 1
                         })
                     )
                     dbBeers.apiBeerList = parsedAPI
