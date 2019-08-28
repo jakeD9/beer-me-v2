@@ -13,7 +13,7 @@ mongoose.connect(db, { useNewUrlParser: true })
     .catch(err => console.log(err))
 
 const app = express();
-const PORT = process.env.port || 3030;
+const PORT = process.env.PORT || 3030;
 
 // base middleware to parse requests
 app.use(express.urlencoded({ extended: true }));
